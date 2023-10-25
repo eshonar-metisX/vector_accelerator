@@ -1,0 +1,4 @@
+/home/chpark/workspace/vector_accelerator/test/build/CMakeFiles/gtest.dir
+/home/chpark/workspace/vector_accelerator/test/build/CMakeFiles/test.exec.dir
+/home/chpark/workspace/vector_accelerator/test/build/CMakeFiles/edit_cache.dir
+/home/chpark/workspace/vector_accelerator/test/build/CMakeFiles/rebuild_cache.dir
