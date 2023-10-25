@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "vector_test.hpp"
+#include "test_cases.hpp"
 
 int main(int argc, char **argv)
 {
