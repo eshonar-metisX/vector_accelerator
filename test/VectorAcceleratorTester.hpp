@@ -55,7 +55,7 @@ protected:
     {
     }   
 
-    ~VectorAcceleratorTester()
+    ~VectorAcceleratorTester() override
     {
         if (intLhs != nullptr && intRhs != nullptr)
         {
@@ -117,7 +117,7 @@ protected:
         else
         {
             resultSize = testSize;
-        }   
+        }
 
     }
 
@@ -190,7 +190,7 @@ protected:
     {             
         try
         {          
-            for (int64_t i = 0; i < resultSize; i++)
+            for (uint64_t i = 0; i < resultSize; i++)
             {               
                 if (intRes[i] != val)
                 {
@@ -211,13 +211,7 @@ protected:
     template <typename src>
     bool ValidateRes(const src* valArr) const
     {
-        
-        
-
-
-
-
-
+        return true; 
     };
 
 

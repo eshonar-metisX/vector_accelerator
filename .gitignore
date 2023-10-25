@@ -366,3 +366,4 @@ FodyWeavers.xsd
 
 # User-specific Build results
 lib/
+test/build/

@@ -47,8 +47,9 @@ endif()
 project (vector_accelerator)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-#include(MetisXHelpers)
 
+#include(MetisXHelpers.cmake)
+#
 #metisx_fetch_external(
 #  googletest
 #  GIT_REPOSITORY https://github.com/google/googletest.git
@@ -69,6 +70,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #   GIT_TAG 8.1.1
 # )
 
+
 get_filename_component(METISX_SDK_PATH ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)
 message(STATUS ${METISX_SDK_PATH})
 
@@ -77,4 +79,16 @@ message(STATUS ${METISX_SDK_PATH})
 #add_subdirectory(mu)
 #add_subdirectory(test)
 
-add_executable(vec.o vector_test.cpp)
+##Locate GTest
+#find_package(GTest REQUIRED)
+#include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
+set(GTEST_SRC /usr/src/gtest/src/gtest-all.cc)
+include_directories(SYSTEM /usr/src/gtest # <-- path to non-header files from gtest-all.cc
+                           /usr/include)  # <-- path to gtest headers
+
+add_library(gtest STATIC ${GTEST_SRC})    # <-- make static library target before main project executable
+target_link_libraries(gtest ${CMAKE_THREAD_LIBS_INIT})
+
+# Link runTests with what we want to test and the GTest and pthread library
+add_executable(test.exec test_main.cpp)
+target_link_libraries(test.exec ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} gtest) # <-- finaly link this library as others

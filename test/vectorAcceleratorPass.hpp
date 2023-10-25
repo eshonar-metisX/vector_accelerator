@@ -13,7 +13,7 @@ namespace pass
             std::is_same_v<dataType, float>, float, void>>>
             static void Add(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {   
-                for (unit64_t i = 0; i < size; i++)
+                for (uint64_t i = 0; i < size; i++)
                 {
                     res[i] = lhs[i] + rhs[i];
                 }
@@ -25,7 +25,7 @@ namespace pass
             std::is_same_v<dataType, float>, float, void>>>
             static void Sub(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {
-                 for (unit64_t i = 0; i < size; i++)
+                 for (uint64_t i = 0; i < size; i++)
                 {
                     res[i] = lhs[i] - rhs[i];
                 }
@@ -40,7 +40,7 @@ namespace pass
             static void Dot(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {
                 dataType sum = 0;
-                 for (unit64_t i = 0; i < size; i++)
+                 for (uint64_t i = 0; i < size; i++)
                 {
                     sum += lhs[i] * rhs[i];
                 }
@@ -55,7 +55,7 @@ namespace pass
             static void DistSquare(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {
                  dataType sum = 0;
-                 for (unit64_t i = 0; i < size; i++)
+                 for (uint64_t i = 0; i < size; i++)
                 {
                     sum += ((lhs[i] - rhs[i]) * (lhs[i] - rhs[i]));
                 }
@@ -68,7 +68,7 @@ namespace pass
             std::is_same_v<dataType, float>, float, void>>>
             static void ElemwiseMul(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {
-                for (unit64_t i = 0; i < size; i++)
+                for (uint64_t i = 0; i < size; i++)
                 {
                     res[i] = lhs[i] * rhs[i];
                 }
@@ -80,7 +80,7 @@ namespace pass
             std::is_same_v<dataType, float>, float, void>>>
             static void Xor(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {
-                for (unit64_t i = 0; i < size; i++)
+                for (uint64_t i = 0; i < size; i++)
                 {
                     res[i] = lhs[i] ^ rhs[i];
                 }
