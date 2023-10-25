@@ -90,9 +90,3 @@ TEST_F(VectorTest, TestCase_XOR)
 {
     EXPECT_TRUE(IsEqVector(3 ^ 4, metisx::vector(3).xor(metisx::vector(4))));
 }
-
-int main(int argc, char **argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
