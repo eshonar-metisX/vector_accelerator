@@ -18,15 +18,13 @@ enum TestDataType
     ALL = INT32 | INT64 | UINT32 | UINT64 | FLOAT32,
 };
 
-enum class TestCase
-{
-    ALL = 0,
+enum class TestFunc
+{    
     ADD,
-    ADD_OVERFLOW,
-    SUB,   
-    SUB_UNDERFLOW,
-    MUL,
-    MUL_OVERFLOW,
+    SUB, 
+    DOT,
+    DIST_SQUARE,
+    ELEM_MUL,
     XOR,
 };
 
@@ -47,8 +45,9 @@ public:
     float* flRes = nullptr;
 
     uint64_t testSize = 1;
-    TestDataType dtFlag = TestDataType::ALL;
-    TestCase caseFlag = TestCase::ALL;
+    uint64_t resultSize = 1;
+    TestDataType dtFlag = TestDataType::INT32;
+    TestFunc caseFlag = TestFunc::ADD;
 
 protected:
 
@@ -99,11 +98,27 @@ protected:
         
     }
 
-    void ConfigureTest(const TestCase& caseFlagParam = TestCase::ALL, const TestDataType& dtFlagParam = TestDataType::ALL, const uint64_t size = 1)
+    inline bool IfTestFuncReturnsScalar() const
+    {
+        return (caseFlag == TestFunc::DOT || caseFlag == TestFunc::DIST_SQUARE);
+    }
+
+    void ConfigureTest(const TestFunc& caseFlagParam = TestFunc::ADD, const TestDataType& dtFlagParam = TestDataType::ALL, const uint64_t size = 1)
     {
         caseFlag = caseFlagParam;
         dtFlag = dtFlagParam;
         testSize = size;
+
+        if (IfTestFuncReturnsScalar())
+        {
+            resultSize = 1;
+        }
+
+        else
+        {
+            resultSize = testSize;
+        }   
+
     }
 
     template <typename dataType>
@@ -152,40 +167,58 @@ protected:
 
         if (dtFlag | (TestDataType::INT32 | TestDataType::INT64))
         {
-            intRes = new int64_t[testSize];
-            memset(intRes, 0, testSize * sizeof(int64_t));
-
+            intRes = new int64_t[resultSize];
+            memset(intRes, 0, resultSize * sizeof(int64_t));
         }
 
         if (dtFlag | TestDataType::FLOAT32)
         {
             flLhs = new float[testSize];
             flRhs = new float[testSize];
-            flRes = new float[testSize];
+            flRes = new float[resultSize];
 
             memset(flLhs, static_cast<float>(lhs), testSize * sizeof(float));
             memset(flRhs, static_cast<float>(rhs), testSize * sizeof(float));
-            memset(flRes, 0, testSize * sizeof(float));
+            memset(flRes, 0, resultSize * sizeof(float));
         }
       
-    }    
-    
-    // virtual void SetUp(const uint64_t& size, const TestCase& flag = TestCase::ALL, const TestDataType& dtFlag = TestDataType::ALL)
-    // {
-    //     testSize = size;
-    //     SetUpArr(dtFlag);
-    // };
+    }   
 
-    // virtual void TearDown()
-    // {
+    //for single value answer
+    template <typename src>
+    inline bool ValidateRes(const src& val) const
+    {             
+        try
+        {          
+            for (int64_t i = 0; i < resultSize; i++)
+            {               
+                if (intRes[i] != val)
+                {
+                    return false;
+                }
+            }
+            return true;            
+        }
+
+        catch (const std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+            return false;
+        }
+
+    };
+    
+    template <typename src>
+    bool ValidateRes(const src* valArr) const
+    {
         
-    // };
+        
 
-    template <typename src, 
-    typename = std::enable_if_t<std::is_same_v<src, int32_t> || std::is_same_v<src, float>>>
-    constexpr bool IsEqArr(src*, src*);
-    
 
+
+
+
+    };
 
 
 };

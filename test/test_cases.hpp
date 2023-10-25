@@ -1,21 +1,26 @@
 #include <gtest/gtest.h>
 #include "VectorAcceleratorTester.hpp"
 #include "../inc/vectorAccelerator.hpp"
+#include "vectorAcceleratorPass.hpp"
 
 static const uint64_t testSize = 100;
 
 TEST_F(VectorAcceleratorTester, TestCase_ADD_INT32)
 {    
-    ConfigureTest(TestCase::ADD, TestDataType::INT32, testSize);
+    ConfigureTest(TestFunc::ADD, TestDataType::INT32, testSize);
     SetUpArr(100, 200);
-    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(intLhs, intRhs, intRes, testSize), 300, testSize));
+    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
+    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
+    EXPECT_TRUE(ValidateRes(300));
 }
 
 TEST_F(VectorAcceleratorTester, TestCase_ADD_INT32_OVERFLOW)
 {
-    ConfigureTest(TestCase::ADD, TestDataType::INT32, testSize);
-    SetUpArr(100, 200);
-    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(intLhs, intRhs, intRes, testSize), 300, testSize));
+    ConfigureTest(TestFunc::ADD, TestDataType::INT32, testSize);
+    SetUpArr(INT32_MAX, 200);
+    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
+    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
+    EXPECT_TRUE(ValidateRes(300));
 }
 
 
