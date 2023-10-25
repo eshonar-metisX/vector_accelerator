@@ -1,5 +1,7 @@
 {
     "files.associations": {
         "iostream": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "/home/chpark/workspace/vector_accelerator/test"
 }

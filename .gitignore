@@ -364,10 +364,5 @@ FodyWeavers.xsd
 .idea/*
 .vscode/extensions.json
 
-mu/sys/
-metisx/firmware/bsp/mu_binary/*
-cppcheck.xml
-
-# User-specific files
-tools/rtl_sim/
-!tools/rtl_sim/*.py
+# User-specific Build results
+lib/
