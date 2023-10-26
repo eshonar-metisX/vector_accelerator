@@ -14,8 +14,10 @@ namespace pass
             static void Add(const dataType* const lhs, const dataType* const rhs, returnType* res, const uint64_t& size = 1)
             {   
                 for (uint64_t i = 0; i < size; i++)
-                {
+                {        
+                    //std::cout << res[i] << std::endl;            
                     res[i] = lhs[i] + rhs[i];
+                    
                 }
             }
 

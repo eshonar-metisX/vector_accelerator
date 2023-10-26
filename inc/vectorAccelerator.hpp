@@ -1,8 +1,72 @@
+#ifndef VECTORACCELERATOR_H_
+#define VECTORACCELERATOR_H_
+
 #include <type_traits>
 #include <cstdint>
+#include <memory>
 
 namespace metisx
 {
+        //int 삭제?
+        //dynamic range는 줄이고 차원을 높이는게 정확도 높음 3072 dim -> 30000 dim까지는 
+        // fp16에서 8000차원정도?
+
+    // appropriate class name needed!
+    // support "user defined datatype" fp16, fp32, ... template needed
+    template <typename dataType, int64_t N>
+    class dataChunk
+    {        
+        static_assert
+        (
+            std::is_same_v<dataType, int32_t> || std::is_same_v<dataType, int64_t> || 
+            std::is_same_v<dataType, float>, 
+            "dataType must be one of int32_t, int64_t or float"
+        );
+
+        using returnType = typename std::conditional_t<
+        std::is_same_v<dataType, int32_t> || std::is_same_v<dataType, int64_t>, int64_t, 
+        std::conditional_t<std::is_same_v<dataType, float>, float, 
+        void>>;       
+
+    public:
+
+        dataChunk() = default;
+        ~dataChunk() = default;
+
+        inline bool IsAllocated() const noexcept
+        {
+            //return rawPtr != nullptr;
+            return true;
+
+        }
+
+        constexpr inline dataChunk& operator+() 
+        { 
+        }
+        
+        constexpr inline dataChunk& operator-() 
+        { 
+        }
+
+
+
+    protected:
+
+        std::unique_ptr<dataType> rawPtr;
+
+
+       
+
+
+
+
+
+    
+
+    };
+
+
+
     // class name too long?
     class vectorAccelerator
     {
@@ -11,7 +75,7 @@ namespace metisx
         // asserting lhs, rhs, res are allocated        
         // signaling error code?
         // signaling NaN? overflow? underflow?
-        // if C++14?        
+        // if C++14?
         // making usage of memory offset and chunk size for partial array access?
         // what if scalar is added to vector? broadcasting behavior? 
 
@@ -78,3 +142,5 @@ namespace metisx
     };
 
 }
+
+#endif // VECTORACCELERATOR_H_

@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/chpark/workspace/vector_accelerator/build",
+  "command": "/usr/bin/g++-10 -isystem /usr/src/gtest -g -fPIC -Wall -Wextra -fms-extensions -pedantic -Wno-pedantic -Werror -g -ld -std=gnu++17 -o CMakeFiles/gtest.dir/usr/src/gtest/src/gtest-all.cc.o -c /usr/src/gtest/src/gtest-all.cc",
+  "file": "/usr/src/gtest/src/gtest-all.cc"
+},
+{
+  "directory": "/home/chpark/workspace/vector_accelerator/build",
+  "command": "/usr/bin/g++-10 -Dtest_exec_EXPORTS -isystem /usr/src/gtest -g -fPIE -Wall -Wextra -fms-extensions -pedantic -Wno-pedantic -Werror -g -ld -std=gnu++17 -o CMakeFiles/test.exec.dir/test_main.cpp.o -c /home/chpark/workspace/vector_accelerator/test/test_main.cpp",
+  "file": "/home/chpark/workspace/vector_accelerator/test/test_main.cpp"
+}
+]

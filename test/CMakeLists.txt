@@ -5,8 +5,15 @@ set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_ENABLE_EXPORTS TRUE)
 
+#threading
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_PTHREADS_INIT 1)
+
 # Profiling
 set(PROFILE_ENABLE 0)
+set(COVERAGE_ENABLE 0)
+
 
 if (PROFILE_ENABLE)
   # usage : gprof sim_gaia_main gmon.out > profOutput.txt
@@ -80,15 +87,11 @@ message(STATUS ${METISX_SDK_PATH})
 #add_subdirectory(test)
 
 ##Locate GTest
-#find_package(GTest REQUIRED)
-#include_directories(SYSTEM ${GTEST_INCLUDE_DIRS})
 set(GTEST_SRC /usr/src/gtest/src/gtest-all.cc)
 include_directories(SYSTEM /usr/src/gtest # <-- path to non-header files from gtest-all.cc
                            /usr/include)  # <-- path to gtest headers
 
 add_library(gtest STATIC ${GTEST_SRC})    # <-- make static library target before main project executable
-target_link_libraries(gtest ${CMAKE_THREAD_LIBS_INIT})
 
-# Link runTests with what we want to test and the GTest and pthread library
 add_executable(test.exec test_main.cpp)
-target_link_libraries(test.exec ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} gtest) # <-- finaly link this library as others
+target_link_libraries(test.exec gtest)

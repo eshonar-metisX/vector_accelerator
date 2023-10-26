@@ -3,56 +3,91 @@
 #include "../inc/vectorAccelerator.hpp"
 #include "vectorAcceleratorPass.hpp"
 
-static const uint64_t testSize = 100;
+template <class T>
+class testParamPack : public testing::Test {};
+
+static const uint64_t gTestSize = 100;
+
+using testScenarios = typename testing::Types<
+std::tuple<int32_t, std::integer_sequence<int64_t, gTestSize>>, 
+std::tuple<int64_t, std::integer_sequence<int64_t, gTestSize>>,
+std::tuple<float, std::integer_sequence<int64_t, gTestSize>>>;
+
+
+TYPED_TEST_CASE(testParamPack, testScenarios);
+
+
+//TYPED_TEST(testParamPack, TEST_TEST)
+//{
+//
+//    using A = typename std::tuple_element<0, decltype(TypeParam())>::type;
+//    using B = typename std::tuple_element<1, decltype(TypeParam())>::type;
+//    //using C = std::tuple_element<2, decltype(TypeParam())>::type;
+//
+//    metisx::dataChunk<A, B> lhs;
+//    EXPECT_TRUE(lhs.IsAllocated());
+//
+//}
+
+//TEST_F(metisx::dataChunk, TestCase_FILL_N)
+//{
+//
+//
+//
+//
+//
+//
+//
+//}
 
 TEST_F(VectorAcceleratorTester, TestCase_ADD_INT32)
 {    
-    ConfigureTest(TestFunc::ADD, TestDataType::INT32, testSize);
+    ConfigureTest(TestFunc::ADD, TestDataType::INT32, gTestSize);
     SetUpArr(100, 200);
-    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
-    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
-    EXPECT_TRUE(ValidateRes(300));
-}
-
-TEST_F(VectorAcceleratorTester, TestCase_ADD_INT32_OVERFLOW)
-{
-    ConfigureTest(TestFunc::ADD, TestDataType::INT32, testSize);
-    SetUpArr(INT32_MAX, 200);
-    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
-    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, testSize);
+    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, gTestSize);
+    metisx::dataChunk<float, gTestSize> lhs;
+    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, gTestSize);
     EXPECT_TRUE(ValidateRes(300));
 }
 
 
+//TEST_F(VectorAcceleratorTester, TestCase_ADD_INT32_OVERFLOW)
+//{
+//    ConfigureTest(TestFunc::ADD, TestDataType::INT32, gTestSize);
+//    SetUpArr(INT32_MAX, 200);
+//    //metisx::vectorAccelerator::Add(intLhs, intRhs, intRes, gTestSize);
+//    pass::vectorAccelerator::Add(intLhs, intRhs, intRes, gTestSize);
+//    EXPECT_TRUE(ValidateRes(300));
+//}
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_INT64)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_INT64_OVERFLOW)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_UINT32)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_UINT32_OVERFLOW)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_UINT64)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 // TEST_F(VectorAcceleratorTester, TestCase_ADD_UINT64_OVERFLOW)
 // {
-//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, testSize), 3));
+//    EXPECT_TRUE(IsEqArr(metisx::vectorAccelerator::add(int_arr_lhs, int_arr_rhs, int_arr_res, gTestSize), 3));
 // }
 
 

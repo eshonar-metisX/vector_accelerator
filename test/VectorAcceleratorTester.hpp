@@ -98,6 +98,15 @@ protected:
         
     }
 
+    template <typename dataType, typename anyType>
+    inline void FillUpArr(dataType* dst, const anyType& val)
+    {
+        for (uint64_t i = 0; i < testSize; i++)
+        {
+            dst[i] = static_cast<dataType>(val);
+        }
+    }
+
     inline bool IfTestFuncReturnsScalar() const
     {
         return (caseFlag == TestFunc::DOT || caseFlag == TestFunc::DIST_SQUARE);
@@ -108,7 +117,6 @@ protected:
         caseFlag = caseFlagParam;
         dtFlag = dtFlagParam;
         testSize = size;
-
         if (IfTestFuncReturnsScalar())
         {
             resultSize = 1;
@@ -119,7 +127,7 @@ protected:
             resultSize = testSize;
         }
 
-    }
+    }   
 
     template <typename dataType>
     void SetUpArr(const dataType& lhs, const dataType& rhs)
@@ -129,18 +137,16 @@ protected:
         {
             intLhs = new int32_t[testSize];
             intRhs = new int32_t[testSize];
-
-            memset(intLhs, static_cast<int32_t>(lhs), testSize * sizeof(int32_t));
-            memset(intRhs, static_cast<int32_t>(rhs), testSize * sizeof(int32_t));
+            FillUpArr(intLhs, lhs);
+            FillUpArr(intRhs, rhs);
         }
 
         if (dtFlag | TestDataType::INT64)
         {
             int64Lhs = new int64_t[testSize];
             int64Rhs = new int64_t[testSize];
-
-            memset(intLhs, static_cast<int64_t>(lhs), testSize * sizeof(int64_t));
-            memset(intRhs, static_cast<int64_t>(rhs), testSize * sizeof(int64_t));
+            FillUpArr(intLhs, lhs);
+            FillUpArr(intRhs, rhs);
         }
 
         // if (dtFlag | TestDataType::UINT32)
@@ -177,8 +183,8 @@ protected:
             flRhs = new float[testSize];
             flRes = new float[resultSize];
 
-            memset(flLhs, static_cast<float>(lhs), testSize * sizeof(float));
-            memset(flRhs, static_cast<float>(rhs), testSize * sizeof(float));
+            FillUpArr(flLhs, lhs);
+            FillUpArr(flRhs, rhs);
             memset(flRes, 0, resultSize * sizeof(float));
         }
       
@@ -187,13 +193,13 @@ protected:
     //for single value answer
     template <typename src>
     inline bool ValidateRes(const src& val) const
-    {             
-        try
+    {                    
+        try        
         {          
             for (uint64_t i = 0; i < resultSize; i++)
             {               
                 if (intRes[i] != val)
-                {
+                {                    
                     return false;
                 }
             }
