@@ -45,7 +45,7 @@ namespace hwip
         {
             for (uint64_t i = 0; i < size; i++)
             {
-                rawPtr.get()[i] += src.rawPtr.get()[i];
+                rawPtr.get()[i] = rawPtr.get()[i] + src.rawPtr.get()[i];
             }
 
             return *this;
@@ -109,7 +109,7 @@ namespace hwip
             returnType sum = 0;
             for (uint64_t i = 0; i < size; i++)
             {
-                sum += rawPtr.get()[i];
+                sum = sum + rawPtr.get()[i];
             }
             return sum;
         };  

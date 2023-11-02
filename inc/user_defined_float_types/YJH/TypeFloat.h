@@ -226,6 +226,11 @@ public:
     TypeFloatBasePtr operator+(const TypeFloat& v);
     TypeFloatBasePtr operator-(const TypeFloat& v);
     TypeFloatBasePtr operator*(const TypeFloat& v);
+
+    TypeFloat& operator+=(const TypeFloat& v);
+    TypeFloat& operator-=(const TypeFloat& v);
+    TypeFloat& operator*=(const TypeFloat& v);
+
     // TypeFloatBasePtr operator/(TypeFloat& v);
 
     // Shift operators
@@ -384,3 +389,4 @@ inline TFDATA getData2sComp(const bool s, const TFDATA v) { return s ? ((~v) + 1
 TFBITS getBitWidth(const TFBITS nb);
 
 }  // namespace numsys_hw
+

@@ -305,7 +305,7 @@ inline HalfFloat& HalfFloat::operator= (const double p_Reference)
 inline bool HalfFloat::operator== (HalfFloat other) const
 {
 	// +0 and -0 are considered to be equal
-	if (!(bits << 1u) && !(other.bits << 1u))return true;
+	if ((bits << 1u) == false && (other.bits << 1u) == false)return true;
 
 	return bits == other.bits && !this->IsNaN();
 }
@@ -313,7 +313,7 @@ inline bool HalfFloat::operator== (HalfFloat other) const
 inline bool HalfFloat::operator!= (HalfFloat other) const
 {
 	// +0 and -0 are considered to be equal
-	if (!(bits << 1u) && !(other.bits << 1u))return false;
+	if ((bits << 1u) == true && (other.bits << 1u) == true)return false;
 
 	return bits != other.bits || this->IsNaN();
 }
@@ -463,7 +463,7 @@ inline HalfFloat operator+ (HalfFloat one, HalfFloat two)
 
 	// compute the difference between the two exponents. shifts with negative
 	// numbers are undefined, thus we need two code paths
-	register int expDiff = one.IEEE.Exp - two.IEEE.Exp;
+	int expDiff = one.IEEE.Exp - two.IEEE.Exp;
 	
 	if (0 == expDiff)
 	{
@@ -489,7 +489,7 @@ inline HalfFloat operator+ (HalfFloat one, HalfFloat two)
 		if (0 == two.IEEE.Exp)m2 = two.IEEE.Frac;
 		else m2 = (int)two.IEEE.Frac | ( 1 << HalfFloat::BITS_MANTISSA );
 
-		if (expDiff < ((sizeof(long)<<3)-(HalfFloat::BITS_MANTISSA+1)))
+		if (expDiff < static_cast<int>((sizeof(long)<<3)-(HalfFloat::BITS_MANTISSA+1)))
 		{
 			m1 <<= expDiff;
 			temp = two.IEEE.Exp;

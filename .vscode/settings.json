@@ -65,7 +65,8 @@
         "semaphore": "cpp",
         "stdint.h": "c",
         "bitset": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cfenv": "cpp"
     },
     "cmake.configureOnOpen": false,
     "cmake.sourceDirectory": "/home/chpark/workspace/vector_accelerator/test"

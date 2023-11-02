@@ -507,6 +507,25 @@ double TypeFloat::operator/(TypeFloat& v) {
     return sign * (1.0 + (double)vMant / std::pow(2.0, newNbMant)) * std::pow(2.0, (double)vExp);
 }
 
+TypeFloat& TypeFloat::operator+=(const TypeFloat& v)
+{
+    *this = *this + v;
+    return *this;
+};
+
+TypeFloat& TypeFloat::operator-=(const TypeFloat& v)
+{
+    *this = *this - v;
+    return *this;
+
+};
+TypeFloat& TypeFloat::operator*=(const TypeFloat& v)
+{
+    *this = *this * v;
+    return *this;
+};
+
+
 // TypeFloat Comparing operations
 void TypeFloat::operator>>(uint32_t rsh) {
     const bool isZero = !(data & ((1 << (nbMant + nbExp)) - 1));
