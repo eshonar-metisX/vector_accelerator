@@ -62,7 +62,10 @@
         "ratio": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "stdint.h": "c",
+        "bitset": "cpp",
+        "fstream": "cpp"
     },
     "cmake.configureOnOpen": false,
     "cmake.sourceDirectory": "/home/chpark/workspace/vector_accelerator/test"
