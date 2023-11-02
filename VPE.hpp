@@ -32,14 +32,15 @@ namespace hwip
 
         bool AllocVector(const uint64_t& N)
         {
-            rawPtr = std::make_unique<dataType[]>(N);
+            size = N;
+            rawPtr = std::make_unique<dataType[]>(size);
             return true;
         }
 
         inline bool IsAllocated() const noexcept
         {
-            //return rawPtr != nullptr;
-            return true;
+            return rawPtr != nullptr;
+            //return true;
         }
 
         constexpr VPE AddElemW()
@@ -47,6 +48,23 @@ namespace hwip
             return VPE();
 
         };
+
+         constexpr VPE& operator=(const VPE& src) 
+        {
+            //assert(dataType == src.dataType);
+
+            if (rawPtr != nullptr)
+            {
+                rawPtr.reset();
+            }
+
+            AllocVector(src.size);
+            memcpy(rawPtr.get(), src.rawPtr.get(), src.size * sizeof(dataType));
+
+            return *this;
+        };
+
+
         constexpr VPE<returnType>& operator+() 
         {
             return VPE();
@@ -85,19 +103,21 @@ namespace hwip
             return returnType(0);
         };  
 
+        dataType& operator[](const uint64_t& idx)
+        {
+            return rawPtr.get()[idx];
+        }
+
 
     protected:
 
-        std::unique_ptr<dataType> rawPtr;
-
-        
-       
-
-
-
-
-
+        uint64_t size = 0;
+        std::unique_ptr<dataType[]> rawPtr = nullptr;
     
+    private:
+
+
+
 
     };
 
