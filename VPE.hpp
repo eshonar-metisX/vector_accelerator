@@ -9,7 +9,6 @@ namespace metisx
 {        
 namespace sim
 {
-
 namespace hwip
 {
 
@@ -17,7 +16,6 @@ namespace hwip
     class VPE
     {
         using returnType = float;
-        
 
     public:
 
