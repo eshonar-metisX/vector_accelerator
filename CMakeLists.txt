@@ -51,7 +51,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wno-gnu-anonymous-struct -Wno-nested-anon-types)
 endif()
 
-project (vector_accelerator)
+project (vector_processing_engine)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
@@ -93,5 +93,8 @@ include_directories(SYSTEM /usr/src/gtest # <-- path to non-header files from gt
 
 add_library(gtest STATIC ${GTEST_SRC})    # <-- make static library target before main project executable
 
-add_executable(test.e ut_runner.cpp)
+add_subdirectory(inc/user_defined_float_types/YJH/)
+
+add_executable(test.e ut/ut_runner.cpp)
 target_link_libraries(test.e gtest)
+target_link_libraries(test.e TypeFloat)

@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <cstdint>
 #include <memory>
+#include <utility>
 
 namespace metisx
 {        
@@ -25,7 +26,6 @@ namespace hwip
         VPE(VPE& src)
         {
             rawPtr = std::move(src.rawPtr);
-
         };
 
         bool AllocVector(const uint64_t& N)
@@ -41,23 +41,30 @@ namespace hwip
             //return true;
         }
 
-        constexpr VPE AddElemW()
+        constexpr VPE& AddElemW(const VPE& src)
         {
-            return VPE();
+            for (uint64_t i = 0; i < size; i++)
+            {
+                rawPtr.get()[i] += src.rawPtr.get()[i];
+            }
 
+            return *this;
         };
 
          constexpr VPE& operator=(const VPE& src) 
-        {
-            //assert(dataType == src.dataType);
-
-            if (rawPtr != nullptr)
-            {
+        {                               
+            if (rawPtr != nullptr && rawPtr.get() != src.rawPtr.get())
+            {                
                 rawPtr.reset();
             }
-
+           
             AllocVector(src.size);
-            memcpy(rawPtr.get(), src.rawPtr.get(), src.size * sizeof(dataType));
+            
+            for (uint64_t i = 0; i < size; i++)
+            {
+                rawPtr.get()[i] = src.rawPtr.get()[i];
+            }
+            //memcpy(rawPtr.get(), src.rawPtr.get(), src.size * sizeof(dataType));
 
             return *this;
         };
@@ -96,9 +103,15 @@ namespace hwip
         {
             return returnType(0);
         };
+
         constexpr returnType ReduceSum()
         {
-            return returnType(0);
+            returnType sum = 0;
+            for (uint64_t i = 0; i < size; i++)
+            {
+                sum += rawPtr.get()[i];
+            }
+            return sum;
         };  
 
         dataType& operator[](const uint64_t& idx)

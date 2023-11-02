@@ -233,7 +233,7 @@ public:
 
     // Compare operators
     // TODO: When v is NaN, maybe all comparions should return false
-    bool operator==(const TypeFloat& v);
+    bool operator==(const TypeFloat& v) const;
     bool operator!=(const TypeFloat& v);
     bool operator>(const TypeFloat& v);
     bool operator<(const TypeFloat& v);
@@ -369,18 +369,18 @@ private:
 //     }
 // };
 
-// /// @brief These functions acquire raw-data of float(v) and double(v)
-// inline TFDATA getFloatData(const float& v) { return *((TFDATA*)&v); }
-// inline bool getFloatSign(const float& v) { return (getFloatData(v) >> 31U) & 1U; }
-// inline TFDATA getFloatMant(const float& v) { return getFloatData(v) & ((1U << 23U) - 1U); }
-// inline TFEXP getFloatExpBiased(const float& v) { return static_cast<TFEXP>((getFloatData(v) >> 23) & ((1 << 8) - 1)); }
-// inline TFEXP getFloatExp(const float& v) { return getFloatExpBiased(v) - 127; }
-// inline TFDATAL getDoubleData(const double& v) { return *((TFDATAL*)&v); }
-// inline bool getDoubleSign(const double& v) { return (getDoubleData(v) >> 63LLU) & 1LLU; }
-// inline TFDATAL getDoubleMant(const double& v) { return getDoubleData(v) & ((1LLU << 52LLU) - 1LLU); }
-// inline TFEXP getDoubleExpBiased(const double& v) { return static_cast<TFEXP>((getDoubleData(v) >> 52) & ((1 << 11) - 1)); }
-// inline TFEXP getDoubleExp(const float& v) { return getDoubleExpBiased(v) - 1023; }
-// inline TFDATA getData2sComp(const bool s, const TFDATA v) { return s ? ((~v) + 1U) : v; }
-// TFBITS getBitWidth(const TFBITS nb);
+/// @brief These functions acquire raw-data of float(v) and double(v)
+inline TFDATA getFloatData(const float& v) { return *((TFDATA*)&v); }
+inline bool getFloatSign(const float& v) { return (getFloatData(v) >> 31U) & 1U; }
+inline TFDATA getFloatMant(const float& v) { return getFloatData(v) & ((1U << 23U) - 1U); }
+inline TFEXP getFloatExpBiased(const float& v) { return static_cast<TFEXP>((getFloatData(v) >> 23) & ((1 << 8) - 1)); }
+inline TFEXP getFloatExp(const float& v) { return getFloatExpBiased(v) - 127; }
+inline TFDATAL getDoubleData(const double& v) { return *((TFDATAL*)&v); }
+inline bool getDoubleSign(const double& v) { return (getDoubleData(v) >> 63LLU) & 1LLU; }
+inline TFDATAL getDoubleMant(const double& v) { return getDoubleData(v) & ((1LLU << 52LLU) - 1LLU); }
+inline TFEXP getDoubleExpBiased(const double& v) { return static_cast<TFEXP>((getDoubleData(v) >> 52) & ((1 << 11) - 1)); }
+inline TFEXP getDoubleExp(const float& v) { return getDoubleExpBiased(v) - 1023; }
+inline TFDATA getData2sComp(const bool s, const TFDATA v) { return s ? ((~v) + 1U) : v; }
+TFBITS getBitWidth(const TFBITS nb);
 
 }  // namespace numsys_hw

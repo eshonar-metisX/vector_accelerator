@@ -2,15 +2,21 @@
 #include "../VPE.hpp"
 
 #include "../inc/user_defined_float_types.hpp"
+#include <vector>
 
 template <class T>
 class testParamPack : public testing::Test {};
+
+template <class T>
+class testClassToType : public T {};
+
 
 static const uint64_t gTestSize = 100;
 
 using testDataTypes = typename testing::Types<
 std::tuple<float, float>, 
-std::tuple<float, double>>;
+std::tuple<float, double>,
+std::tuple<float, numsys_hw::TypeFloat>>;
 
 TYPED_TEST_SUITE(testParamPack, testDataTypes);
 
@@ -23,8 +29,8 @@ TYPED_TEST(testParamPack, VPE_ALLOC_TEST)
    metisx::sim::hwip::VPE<dTypeA> lhs;
    metisx::sim::hwip::VPE<dTypeB> rhs;
 
-   lhs.AllocVector(100);
-   rhs.AllocVector(100);
+   lhs.AllocVector(gTestSize);
+   rhs.AllocVector(gTestSize);
 
    EXPECT_TRUE(lhs.IsAllocated());
    EXPECT_TRUE(rhs.IsAllocated());
@@ -40,8 +46,8 @@ TYPED_TEST(testParamPack, VPE_DEALLOC_TEST)
    metisx::sim::hwip::VPE<dTypeA> lhs;
    metisx::sim::hwip::VPE<dTypeB> rhs;
 
-   lhs.AllocVector(100);
-   rhs.AllocVector(100);
+   lhs.AllocVector(gTestSize);
+   rhs.AllocVector(gTestSize);
 
    EXPECT_TRUE(lhs.IsAllocated());
    EXPECT_TRUE(rhs.IsAllocated());
@@ -57,24 +63,139 @@ TYPED_TEST(testParamPack, VPE_VALUE_ASSIGN_TEST)
    metisx::sim::hwip::VPE<dTypeA> lhs;
    metisx::sim::hwip::VPE<dTypeB> rhs;
 
-   lhs.AllocVector(100);
-   rhs.AllocVector(100);
+   lhs.AllocVector(gTestSize);
+   rhs.AllocVector(gTestSize);
 
    lhs[3] = 1;
 
-   EXPECT_EQ(lhs[3], 1);
-   EXPECT_EQ(rhs[25], 0);
+   EXPECT_EQ(lhs[3], static_cast<dTypeA>(1));
+   EXPECT_EQ(rhs[25], static_cast<dTypeB>(0));
 
 }
+
+TYPED_TEST(testParamPack, VPE_EQUAL_TEST)
+{   
+   {
+      using dTypeA = typename std::tuple_element<0, decltype(TypeParam())>::type;   
+
+      metisx::sim::hwip::VPE<dTypeA> lhs;
+      metisx::sim::hwip::VPE<dTypeA> rhs;
+
+      lhs.AllocVector(gTestSize);
+      rhs.AllocVector(gTestSize);
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            lhs[i] = static_cast<float>(i);
+            rhs[i] = static_cast<float>(i);
+      } 
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            EXPECT_EQ(lhs[i], rhs[i]);
+      }
+   }
+   {
+      using dTypeA = typename std::tuple_element<1, decltype(TypeParam())>::type;   
+
+      metisx::sim::hwip::VPE<dTypeA> lhs;
+      metisx::sim::hwip::VPE<dTypeA> rhs;
+
+      lhs.AllocVector(gTestSize);
+      rhs.AllocVector(gTestSize);
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            lhs[i] = static_cast<float>(i);
+            rhs[i] = static_cast<float>(i);
+      } 
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            EXPECT_EQ(lhs[i], rhs[i]);
+      }
+   }
+
+
+}
+
+TYPED_TEST(testParamPack, VPE_COPY_TEST)
+{
+   {
+      using dTypeA = typename std::tuple_element<0, decltype(TypeParam())>::type;   
+
+      metisx::sim::hwip::VPE<dTypeA> lhs;
+      metisx::sim::hwip::VPE<dTypeA> rhs;
+
+      lhs.AllocVector(gTestSize);
+      rhs.AllocVector(gTestSize);
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+         lhs[i] = static_cast<float>(i);
+      }
+
+      rhs = lhs;
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            EXPECT_EQ(lhs[i], rhs[i]);
+      }
+   }
+   {
+      using dTypeA = typename std::tuple_element<1, decltype(TypeParam())>::type;   
+
+      metisx::sim::hwip::VPE<dTypeA> lhs;
+      metisx::sim::hwip::VPE<dTypeA> rhs;
+
+      lhs.AllocVector(gTestSize);
+      rhs.AllocVector(gTestSize);
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+         lhs[i] = static_cast<float>(i);
+      }
+
+      rhs = lhs;
+
+      for (uint64_t i = 0; i < gTestSize; i++)
+      {
+            EXPECT_EQ(lhs[i], rhs[i]);
+      }
+   }
+
+}
+
 
 TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_TEST)
 {
    
    using dTypeA = typename std::tuple_element<0, decltype(TypeParam())>::type;
-   using dTypeB = typename std::tuple_element<1, decltype(TypeParam())>::type;
+   //using dTypeB = typename std::tuple_element<1, decltype(TypeParam())>::type;
 
    metisx::sim::hwip::VPE<dTypeA> lhs;
-   metisx::sim::hwip::VPE<dTypeB> rhs;
+   metisx::sim::hwip::VPE<dTypeA> rhs;
+
+   lhs.AllocVector(gTestSize);
+   rhs.AllocVector(gTestSize);
+
+   for (uint64_t i = 0; i < gTestSize; i++)
+   {
+      lhs[i] = static_cast<float>(i);
+      rhs[i] = static_cast<float>(i);
+   }
+
+   lhs = lhs.AddElemW(rhs);
+
+   //for (uint64_t i = 0; i < gTestSize; i++)
+   //{
+   //    EXPECT_EQ(lhs[i], static_cast<dTypeA>(2 * i));
+   //}
+
+
+   //metisx::sim::hwip::VPE<float> ctrlGroup;
+   //std::vector<float> stdCtrlGroup;
+
 
 
 }
@@ -138,6 +259,26 @@ TYPED_TEST(testParamPack, VPE_DIST_SQUARE_TEST)
 
    metisx::sim::hwip::VPE<dTypeA> lhs;
    metisx::sim::hwip::VPE<dTypeB> rhs;
+
+}
+
+TYPED_TEST(testParamPack, VPE_REDUCE_SUM_TEST)
+{
+   
+   using dTypeA = typename std::tuple_element<0, decltype(TypeParam())>::type;
+
+   metisx::sim::hwip::VPE<dTypeA> vec;
+
+   vec.AllocVector(gTestSize);
+
+   for (uint64_t i = 0; i < gTestSize; i++)
+   {
+       vec[i] = i;
+   }
+
+   float sum = vec.ReduceSum();
+
+   EXPECT_EQ(sum, 4950);
 
 }
 
