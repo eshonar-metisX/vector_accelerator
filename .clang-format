@@ -1,0 +1,20 @@
+# Run manually to reformat a file:
+# clang-format -i --style=file <file>
+Language:        Cpp
+BasedOnStyle:  Google
+BreakBeforeBraces: Allman
+IndentWidth: 4
+AccessModifierOffset: -4
+ColumnLimit: 0 
+AllowShortBlocksOnASingleLine : Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine : false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: None #Inline
+AllowShortLoopsOnASingleLine: false
+PackConstructorInitializers: Never
+AllowAllArgumentsOnNextLine : false
+#AllowShortCaseLabelsOnASingleLine : false
+#AllowShortEnumsOnASingleLine : false
+BinPackArguments  : false

@@ -1,145 +1,97 @@
-#ifndef METISX_SIM_HWIP_VPE_H_
-#define METISX_SIM_HWIP_VPE_H_
+#pragma once
 
-#include <type_traits>
 #include <cstdint>
-#include <memory>
-#include <utility>
+#include <type_traits>
 
-namespace metisx
-{        
-namespace sim
+template <typename dataType>
+class VectorProcessingEngine
 {
-namespace hwip
-{
+public:
 
- template <typename dataType>
-    class VPE
-    {
-        using returnType = float;
+    // forced to float32 for now
+    using returnType = std::conditional_t<std::is_same_v<dataType, double>, double, float>;
+    using bitwiseType = std::conditional_t<sizeof(dataType) == 4, uint32_t, uint64_t>;
 
-    public:
-
-        VPE() = default;
-        ~VPE() = default;
-
-        VPE(VPE& src)
-        {
-            rawPtr = std::move(src.rawPtr);
-        };
-
-        bool AllocVector(const uint64_t& N)
-        {
-            size = N;
-            rawPtr = std::make_unique<dataType[]>(size);
-            return true;
-        }
-
-        inline bool IsAllocated() const noexcept
-        {
-            return rawPtr != nullptr;
-            //return true;
-        }
-
-        constexpr VPE& AddElemW(const VPE& src)
-        {
-            for (uint64_t i = 0; i < size; i++)
-            {
-                rawPtr.get()[i] = rawPtr.get()[i] + src.rawPtr.get()[i];
-            }
-
-            return *this;
-        };
-
-         constexpr VPE& operator=(const VPE& src) 
-        {                               
-            if (rawPtr != nullptr && rawPtr.get() != src.rawPtr.get())
-            {                
-                rawPtr.reset();
-            }
-           
-            AllocVector(src.size);
-            
-            for (uint64_t i = 0; i < size; i++)
-            {
-                rawPtr.get()[i] = src.rawPtr.get()[i];
-            }
-            //memcpy(rawPtr.get(), src.rawPtr.get(), src.size * sizeof(dataType));
-
-            return *this;
-        };
-
-
-        constexpr VPE<returnType>& operator+() 
-        {
-            return VPE();
-        };
-
-        constexpr VPE<returnType>& SubElemW()
-         {
-            return VPE();
-        };
-        constexpr VPE<returnType>& operator-(){
-            return VPE();
-        };
-
-        constexpr VPE<returnType>& MulElemW() 
-        {
-            return VPE();
-        };
-        constexpr VPE<returnType>& operator*() 
-        {
-            return VPE();
-        };
-        constexpr VPE<returnType>& XorElemW() 
-        {
-            return VPE();
-        };
-        constexpr returnType Dot()
-        {
-            return returnType(0);
-        };
-        constexpr returnType DistanceSquare()
-        {
-            return returnType(0);
-        };
-
-        constexpr returnType ReduceSum()
-        {
-            returnType sum = 0;
-            for (uint64_t i = 0; i < size; i++)
-            {
-                sum = sum + rawPtr.get()[i];
-            }
-            return sum;
-        };  
-
-        dataType& operator[](const uint64_t& idx)
-        {
-            return rawPtr.get()[idx];
-        }
-
-
-    protected:
-
-        uint64_t size = 0;
-        std::unique_ptr<dataType[]> rawPtr = nullptr;
+    VPE() = delete;
     
-    private:
-
-
-
+    template <typename inputTypeA, typename inputTypeB>
+    static inline void AddElemwise(returnType* res, const inputTypeA* const lhs, const inputTypeB* const rhs, const uint64_t& size)
+    {         
+        for (uint64_t i = 0; i < size; i++)
+        {
+            res[i] = lhs[i] + rhs[i];
+        }
 
     };
 
+    template <typename inputTypeA, typename inputTypeB>
+    static inline void SubElemwise(returnType* res, const inputTypeA* const lhs, const inputTypeB* const rhs, const uint64_t& size)
+    {         
+        for (uint64_t i = 0; i < size; i++)
+        {
+            res[i] = lhs[i] - rhs[i];
+        }
+    
+    };
 
+    template <typename inputTypeA, typename inputTypeB>
+    static inline void MulElemwise(returnType* res, const inputTypeA* const lhs, const inputTypeB* const rhs, const uint64_t& size)
+    {         
+        for (uint64_t i = 0; i < size; i++)
+        {
+            res[i] = lhs[i] * rhs[i];
+        }
+                
+    };
 
-   
+    template <typename inputTypeA, typename inputTypeB>
+    static inline void XorElemwise(inputTypeA* res, const inputTypeA* const lhs, const inputTypeB* const rhs, const uint64_t& size)
+    {         
+        for (uint64_t i = 0; i < size; i++)
+        {
+            res[i] = static_cast<inputTypeA>(static_cast<bitwiseType>(lhs[i]) ^ static_cast<bitwiseType>(rhs[i]));
+        }
+    
+    };
 
-} // namespace hwip
+    template <typename inputType>
+    static inline returnType ReduceSum(const inputType* const src, const uint64_t& size)
+    {
+        returnType sum = 0;
+        for (uint64_t i = 0; i < size; i++)
+        {
+            sum = sum + src[i];
+        }
+        return sum;
+    };
 
-} // namespace sim
+    static returnType DotProduct(const dataType* const lhs, const dataType* const rhs, const uint64_t& size)
+    {      
+        returnType* res = new returnType[size];
 
-} // namespace metisx   
+        MulElemwise(res, lhs, rhs, size);
 
-#endif // METISX_SIM_HWIP_VPE_H_
+        returnType sum = ReduceSum(res, size);
+
+        delete[] res;
+
+        return sum;
+
+    };
+
+    static returnType DistanceSqaure(const dataType* const lhs, const dataType* const rhs, const uint64_t& size)
+    {      
+        returnType* res = new returnType[size];
+
+        SubElemwise(res, lhs, rhs, size);
+        MulElemwise(res, res, res, size);
+
+        returnType sum = ReduceSum(res, size);
+
+        delete[] res;
+
+        return sum;
+
+    };
+
+};

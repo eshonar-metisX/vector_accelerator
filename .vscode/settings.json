@@ -69,5 +69,5 @@
         "cfenv": "cpp"
     },
     "cmake.configureOnOpen": false,
-    "cmake.sourceDirectory": "/home/chpark/workspace/vector_accelerator/test"
+    "cmake.sourceDirectory": "/home/chpark/workspace/vector_accelerator"
 }
