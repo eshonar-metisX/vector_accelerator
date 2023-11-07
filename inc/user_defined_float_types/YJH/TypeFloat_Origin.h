@@ -218,14 +218,6 @@ public:
 
     // Assignment operator
     const TypeFloatBase& operator=(TypeFloatBasePtr v);
-
-    template <typename inputType>
-    TypeFloatBase& operator=(const inputType& v)
-    {
-        TypeFloatBase::operator=(v);
-        return *this;
-    };
-
     const TypeFloatBase& assignRounded(TypeFloatBasePtr v);
 
     // Arithmetic operators
