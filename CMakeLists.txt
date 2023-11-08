@@ -40,9 +40,9 @@ endif()
 # will be removed -fms-extensions
 set(CMAKE_CXX_STANDARD 17)
 if (INSTALL_MODE STREQUAL "1")
-add_compile_options(-Wall -Wextra -fms-extensions -g -ld)
+add_compile_options(-Wall -Wextra -fms-extensions -g -ld -flto)
 else()
-add_compile_options(-Wall -Wextra -fms-extensions -pedantic -Wno-pedantic -Werror -g -ld)
+add_compile_options(-Wall -Wextra -fms-extensions -pedantic -Wno-pedantic -Werror -g -ld -flto)
 endif()
 
 
@@ -93,8 +93,9 @@ include_directories(SYSTEM /usr/src/gtest # <-- path to non-header files from gt
 
 add_library(gtest STATIC ${GTEST_SRC})    # <-- make static library target before main project executable
 
+
 add_subdirectory(inc/user_defined_float_types/YJH/)
+add_subdirectory(VPE)
 
 add_executable(test.e ut/ut_runner.cpp)
-target_link_libraries(test.e gtest)
-target_link_libraries(test.e TypeFloat)
+target_link_libraries(test.e gtest VPE TypeFloat)

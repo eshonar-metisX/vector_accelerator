@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <type_traits>
-#include "mu_VPE.hpp"
+#include "VPE/mu_VPE.hpp"
 
 template <typename dataType>
 class VectorType
@@ -14,7 +14,8 @@ public:
 
     VectorType() = default;
 
-    VectorType(dataType* srcPtr)
+//TODO
+    explicit VectorType(dataType* srcPtr)
     {
         arr_ = srcPtr;
     }
@@ -88,10 +89,12 @@ public:
     //copy assignment
     VectorType& operator=(const VectorType& rhs)
     {
-        std::cout << "copy! " << std::endl;
+        //std::cout << "copy! " << std::endl;
 
         if (this != &rhs)
-        {
+        {            
+            //std::cout << "deep copy! " << std::endl;
+
             if (arr_ != nullptr)
             {
                 delete[] arr_;
@@ -105,6 +108,44 @@ public:
         return *this;
     }
 
+     VectorType& operator=(dataType* rhs)
+    {
+        //std::cout << "copy! " << std::endl;
+
+        if (arr_ != rhs)
+        {            
+            //std::cout << "shallow copy! " << std::endl;
+
+            if (arr_ != nullptr)
+            {
+                delete[] arr_;
+            }
+            arr_ = rhs;
+        }
+        return *this;
+    }
+
+    // VectorType& operator=(VectorType& rhs)
+    // {
+    //     std::cout << "copy! " << std::endl;
+
+    //     if (this != &rhs)
+    //     {            
+    //         std::cout << "deep copy! " << std::endl;
+
+    //         if (arr_ != nullptr)
+    //         {
+    //             delete[] arr_;
+    //         }
+    //         Resize(rhs.Size());
+    //         for (uint64_t i = 0; i < size_; i++)
+    //         {
+    //             arr_[i] = rhs.arr_[i];
+    //         }
+    //     }
+    //     return *this;
+    // }
+
 private:
 
     uint64_t size_ = 0;
@@ -112,35 +153,51 @@ private:
 
 };
 
-template <typename inputTypeA, typename inputTypeB,typename returnType = typename VectorProcessingEngine<inputTypeA>::returnType>
-VectorType<returnType> operator+(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
+template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
+returnType* operator+(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
 {
     VectorType<returnType> res;
     res.Resize(lhs.Size());
 
-    VectorProcessingEngine<inputTypeA>::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+    VectorProcessingEngine::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+
+    return res.GetRawPtr();
+}
+
+template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
+returnType* operator+(const VectorType<inputTypeA>& lhs, inputTypeB* rhs)
+{
+    VectorProcessingEngine::AddElemwise(rhs, lhs.GetRawPtr(), rhs, lhs.Size());
+
+    return rhs;
+}
+
+template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
+returnType* operator+(inputTypeA* lhs, const VectorType<inputTypeB>& rhs)
+{
+    VectorProcessingEngine::AddElemwise(lhs, lhs, rhs.GetRawPtr(), rhs.Size());
+
+    return lhs;
+}
+
+template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
+const VectorType<returnType> operator-(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
+{
+    VectorType<returnType> res;
+    res.Resize(lhs.Size());
+
+    VectorProcessingEngine::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
 
     return res;
 }
 
-template <typename inputTypeA, typename inputTypeB,typename returnType = typename VectorProcessingEngine<inputTypeA>::returnType>
-VectorType<returnType> operator-(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
+template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
+const VectorType<returnType> operator*(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
 {
     VectorType<returnType> res;
     res.Resize(lhs.Size());
 
-    VectorProcessingEngine<inputTypeA>::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
-
-    return res;
-}
-
-template <typename inputTypeA, typename inputTypeB,typename returnType = typename VectorProcessingEngine<inputTypeA>::returnType>
-VectorType<returnType> operator*(const VectorType<inputTypeA>& lhs, const VectorType<inputTypeB>& rhs)
-{
-    VectorType<returnType> res;
-    res.Resize(lhs.Size());
-
-    VectorProcessingEngine<inputTypeA>::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+    VectorProcessingEngine::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
 
     return res;
 }

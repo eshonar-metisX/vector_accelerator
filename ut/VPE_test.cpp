@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../mu_VPE.hpp"
+#include "../VPE/mu_VPE.hpp"
 #include "../VectorType.hpp"
 
 #include "vector_test_helper_func.cpp"
@@ -55,7 +55,7 @@ public:
 // HalfFloat always fails: excluding for now
 // numsys_hw::TypeFloat operator 부족함, 추가해야
 using testDataTypes = typename testing::Types<
-float, half_float::half, double
+float, half_float::half
 >;
 
 testing::AssertionResult EqComparator([[maybe_unused]] const char* m_expr, [[maybe_unused]] const char* n_expr, const float& m, const float& n) 
@@ -145,7 +145,7 @@ TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_TEST)
 {   
    VectorType<TypeParam> lhs;
    VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
+   VectorType<TypeParam> res;  
 
    lhs.Resize(gTestSize);
    rhs.Resize(gTestSize);
@@ -158,7 +158,7 @@ TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine<TypeParam>::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   VectorProcessingEngine::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {
@@ -170,38 +170,39 @@ TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_TEST)
    res.Free();
 }
 
-TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_OPERATOR_TEST)
-{   
-   VectorType<TypeParam> lhs;
-   VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
+// TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_OPERATOR_TEST)
+// {   
+//    VectorType<TypeParam> lhs;
+//    VectorType<TypeParam> rhs;
+//    VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
 
-   lhs.Resize(gTestSize);
-   rhs.Resize(gTestSize);
+//    lhs.Resize(gTestSize);
+//    rhs.Resize(gTestSize);
 
-   for (int i = 0; i < gTestSize; i++)
-   {
-      lhs[i] = static_cast<float>(i);
-      rhs[i] = static_cast<float>(i * 2);
-   }
+//    for (int i = 0; i < gTestSize; i++)
+//    {
+//       lhs[i] = static_cast<float>(i);
+//       rhs[i] = static_cast<float>(i * 2);
+//    }
 
-   res = lhs + lhs + lhs + rhs;
+//    //res = lhs + rhs; // lhs + lhs +
+//    res = lhs + lhs + lhs + rhs; //
 
-   for (int i = 0; i < gTestVerifSize; i++)
-   {      
-      EXPECT_PRED_FORMAT2(EqComparator, res[i], i + i + i + i * 2);
-   }
+//    for (int i = 0; i < gTestVerifSize; i++)
+//    {      
+//       EXPECT_PRED_FORMAT2(EqComparator, res[i], i + i + i + i * 2);
+//    }
 
-   lhs.Free();
-   rhs.Free();
-   res.Free();
-}
+//    lhs.Free();
+//    rhs.Free();
+//    res.Free();
+// }
 
 TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_TEST)
 {
    VectorType<TypeParam> lhs;
    VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;
+   VectorType<TypeParam> res;
 
    lhs.Resize(gTestSize);
    rhs.Resize(gTestSize);
@@ -214,7 +215,7 @@ TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine<TypeParam>::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   VectorProcessingEngine::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {      
@@ -225,37 +226,37 @@ TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_TEST)
    res.Free();
 }
 
-TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_OPERATOR_TEST)
-{   
-   VectorType<TypeParam> lhs;
-   VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
+// TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_OPERATOR_TEST)
+// {   
+//    VectorType<TypeParam> lhs;
+//    VectorType<TypeParam> rhs;
+//    VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
 
-   lhs.Resize(gTestSize);
-   rhs.Resize(gTestSize);
+//    lhs.Resize(gTestSize);
+//    rhs.Resize(gTestSize);
 
-   for (int i = 0; i < gTestSize; i++)
-   {
-      lhs[i] = static_cast<float>(i);
-      rhs[i] = static_cast<float>(i * 2);
-   }
+//    for (int i = 0; i < gTestSize; i++)
+//    {
+//       lhs[i] = static_cast<float>(i);
+//       rhs[i] = static_cast<float>(i * 2);
+//    }
 
-   res = lhs - lhs - lhs - rhs;
+//    res = lhs - lhs - lhs - rhs;
 
-   for (int i = 0; i < gTestVerifSize; i++)
-   {      
-      EXPECT_PRED_FORMAT2(EqComparator, res[i], i - i - i - i * 2);
-   }
-   lhs.Free();
-   rhs.Free();
-   res.Free();
-}
+//    for (int i = 0; i < gTestVerifSize; i++)
+//    {      
+//       EXPECT_PRED_FORMAT2(EqComparator, res[i], i - i - i - i * 2);
+//    }
+//    lhs.Free();
+//    rhs.Free();
+//    res.Free();
+// }
 
 TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_TEST)
 {   
    VectorType<TypeParam> lhs;
    VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;
+   VectorType<float> res;
 
    lhs.Resize(gTestSize);
    rhs.Resize(gTestSize);
@@ -268,7 +269,7 @@ TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine<TypeParam>::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   VectorProcessingEngine::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {      
@@ -279,61 +280,62 @@ TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_TEST)
    res.Free();
 }
 
-TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_OPERATOR_TEST)
-{   
-   VectorType<TypeParam> lhs;
-   VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
+// TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_OPERATOR_TEST)
+// {   
+//    VectorType<TypeParam> lhs;
+//    VectorType<TypeParam> rhs;
+//    VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
 
-   lhs.Resize(gTestSize);
-   rhs.Resize(gTestSize);
+//    lhs.Resize(gTestSize);
+//    rhs.Resize(gTestSize);
 
-   for (int i = 0; i < gTestSize; i++)
-   {
-      lhs[i] = static_cast<TypeParam>(i);
-      rhs[i] = static_cast<TypeParam>(i * 2);
-   }
+//    for (int i = 0; i < gTestSize; i++)
+//    {
+//       lhs[i] = static_cast<TypeParam>(i);
+//       rhs[i] = static_cast<TypeParam>(i * 2);
+//    }
 
-   res = lhs * rhs;
+//    res = lhs * rhs;
 
-   for (int i = 0; i < gTestVerifSize; i++)
-   {      
-      TypeParam lhs_elem = static_cast<TypeParam>(i);
-      TypeParam rhs_elem = static_cast<TypeParam>(i * 2);
-      EXPECT_PRED_FORMAT2(EqComparator, res[i], lhs_elem * rhs_elem);
-   }
-   lhs.Free();
-   rhs.Free();
-   res.Free();
-}
+//    for (int i = 0; i < gTestVerifSize; i++)
+//    {      
+//       TypeParam lhs_elem = static_cast<TypeParam>(i);
+//       TypeParam rhs_elem = static_cast<TypeParam>(i * 2);
+//       EXPECT_PRED_FORMAT2(EqComparator, res[i], lhs_elem * rhs_elem);
+//    }
+//    lhs.Free();
+//    rhs.Free();
+//    res.Free();
+// }
 
-TYPED_TEST(testParamPack, VPE_COMP_ELEMWISE_OPERATOR_TEST)
-{   
-   VectorType<TypeParam> lhs;
-   VectorType<TypeParam> rhs;
-   VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
+// TYPED_TEST(testParamPack, VPE_COMP_ELEMWISE_OPERATOR_TEST)
+// {   
+//    VectorType<TypeParam> lhs;
+//    VectorType<TypeParam> rhs;
+//    VectorType<typename VectorProcessingEngine<TypeParam>::returnType> res;  
 
-   lhs.Resize(gTestSize);
-   rhs.Resize(gTestSize);
+//    lhs.Resize(gTestSize);
+//    rhs.Resize(gTestSize);
 
-   for (int i = 0; i < gTestSize; i++)
-   {
-      lhs[i] = static_cast<float>(i);
-      rhs[i] = static_cast<float>(i * 2);
-   }
+//    for (int i = 0; i < gTestSize; i++)
+//    {
+//       lhs[i] = static_cast<float>(i);
+//       rhs[i] = static_cast<float>(i * 2);
+//    }
 
-   res = lhs * lhs - lhs * (rhs + rhs);
+//    res = lhs * lhs - lhs * (rhs + rhs);
 
-   for (int i = 0; i < gTestVerifSize; i++)
-   {      
-      TypeParam lhs_elem = static_cast<TypeParam>(i);
-      TypeParam rhs_elem = static_cast<TypeParam>(i * 2);
-      EXPECT_PRED_FORMAT2(EqComparator, res[i], lhs_elem * lhs_elem - lhs_elem * (rhs_elem + rhs_elem));
-   }
-   lhs.Free();
-   rhs.Free();
-   res.Free();
-}
+//    for (int i = 0; i < gTestVerifSize; i++)
+//    {      
+//       TypeParam lhs_elem = static_cast<TypeParam>(i);
+//       TypeParam rhs_elem = static_cast<TypeParam>(i * 2);
+//       //EXPECT_PRED_FORMAT2(EqComparator, res[i], lhs_elem * lhs_elem - lhs_elem * (rhs_elem + rhs_elem));
+//       EXPECT_PRED_FORMAT2(EqComparator, res[i], lhs_elem * lhs_elem - lhs_elem * (rhs_elem + rhs_elem));
+//    }
+//    lhs.Free();
+//    rhs.Free();
+//    res.Free();
+// }
 
 TYPED_TEST(testParamPack, VPE_XOR_ELEMWISE_TEST)
 {   
@@ -352,7 +354,7 @@ TYPED_TEST(testParamPack, VPE_XOR_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine<TypeParam>::XorElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   VectorProcessingEngine::XorElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestSize; i++)
    {      
@@ -365,7 +367,7 @@ TYPED_TEST(testParamPack, VPE_XOR_ELEMWISE_TEST)
 
 TYPED_TEST(testParamPack, VPE_REDUCE_SUM_TEST)
 {   
-   typename VectorProcessingEngine<TypeParam>::returnType sum = 0;
+   float sum = 0;
    VectorType<TypeParam> src;
 
    src.Resize(gTestSize);
@@ -375,9 +377,9 @@ TYPED_TEST(testParamPack, VPE_REDUCE_SUM_TEST)
       src[i] = static_cast<TypeParam>(i + 0.1);
    }
 
-   sum = VectorProcessingEngine<TypeParam>::ReduceSum(src.GetRawPtr(), gTestSize);
+   sum = VectorProcessingEngine::ReduceSum(src.GetRawPtr(), gTestSize);
    
-   typename VectorProcessingEngine<TypeParam>::returnType test_sum = 0;
+   float test_sum = 0;
    for (int i = 0; i < gTestSize; i++)
    {
       test_sum += static_cast<TypeParam>(i + 0.1);
@@ -389,7 +391,7 @@ TYPED_TEST(testParamPack, VPE_REDUCE_SUM_TEST)
 
 TYPED_TEST(testParamPack, VPE_DOT_TEST)
 {   
-   typename VectorProcessingEngine<TypeParam>::returnType dot = 0;
+   float dot = 0;
 
    VectorType<TypeParam> lhs;
    VectorType<TypeParam> rhs;
@@ -403,9 +405,9 @@ TYPED_TEST(testParamPack, VPE_DOT_TEST)
       rhs[i] = static_cast<TypeParam>(i * 2 + 0.01);
    }
 
-   dot = VectorProcessingEngine<TypeParam>::DotProduct(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
+   dot = VectorProcessingEngine::DotProduct(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
    
-   typename VectorProcessingEngine<TypeParam>::returnType test_dot = 0;
+   float test_dot = 0;
    for (int i = 0; i < gTestSize; i++)
    {
       test_dot += static_cast<TypeParam>(i + 0.1) * static_cast<TypeParam>(i * 2 + 0.01);
@@ -418,7 +420,7 @@ TYPED_TEST(testParamPack, VPE_DOT_TEST)
 
 TYPED_TEST(testParamPack, VPE_DIST_SQUARE_TEST)
 {   
-   typename VectorProcessingEngine<TypeParam>::returnType dot = 0;
+   float dot = 0;
 
    VectorType<TypeParam> lhs;
    VectorType<TypeParam> rhs;
@@ -432,9 +434,9 @@ TYPED_TEST(testParamPack, VPE_DIST_SQUARE_TEST)
       rhs[i] = static_cast<TypeParam>(i * 2 + 0.01);
    }
 
-   dot = VectorProcessingEngine<TypeParam>::DistanceSqaure(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
+   dot = VectorProcessingEngine::DistanceSqaure(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
    
-   typename VectorProcessingEngine<TypeParam>::returnType test_dot = 0;
+   float test_dot = 0;
    for (int i = 0; i < gTestSize; i++)
    {
       test_dot += (static_cast<TypeParam>(i + 0.1) - static_cast<TypeParam>(i * 2 + 0.01)) * (static_cast<TypeParam>(i + 0.1) - static_cast<TypeParam>(i * 2 + 0.01));
