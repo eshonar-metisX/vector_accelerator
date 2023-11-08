@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../VPE/mu_VPE.hpp"
+#include "../VPE/mu_vpe.hpp"
 #include "../VectorType.hpp"
 
 #include "vector_test_helper_func.cpp"
@@ -158,7 +158,7 @@ TYPED_TEST(testParamPack, VPE_ADD_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   mu::VectorProcessingEngine::addElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {
@@ -215,7 +215,7 @@ TYPED_TEST(testParamPack, VPE_SUB_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   mu::VectorProcessingEngine::subElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {      
@@ -269,7 +269,7 @@ TYPED_TEST(testParamPack, VPE_MUL_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   mu::VectorProcessingEngine::mulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestVerifSize; i++)
    {      
@@ -354,7 +354,7 @@ TYPED_TEST(testParamPack, VPE_XOR_ELEMWISE_TEST)
       res[i] = 0.;
    }
 
-   VectorProcessingEngine::XorElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
+   mu::VectorProcessingEngine::xorElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), gTestSize);
 
    for (int i = 0; i < gTestSize; i++)
    {      
@@ -377,7 +377,7 @@ TYPED_TEST(testParamPack, VPE_REDUCE_SUM_TEST)
       src[i] = static_cast<TypeParam>(i + 0.1);
    }
 
-   sum = VectorProcessingEngine::ReduceSum(src.GetRawPtr(), gTestSize);
+   sum = mu::VectorProcessingEngine::reduceSum(src.GetRawPtr(), gTestSize);
    
    float test_sum = 0;
    for (int i = 0; i < gTestSize; i++)
@@ -405,7 +405,7 @@ TYPED_TEST(testParamPack, VPE_DOT_TEST)
       rhs[i] = static_cast<TypeParam>(i * 2 + 0.01);
    }
 
-   dot = VectorProcessingEngine::DotProduct(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
+   dot = mu::VectorProcessingEngine::dotProduct(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
    
    float test_dot = 0;
    for (int i = 0; i < gTestSize; i++)
@@ -434,7 +434,7 @@ TYPED_TEST(testParamPack, VPE_DIST_SQUARE_TEST)
       rhs[i] = static_cast<TypeParam>(i * 2 + 0.01);
    }
 
-   dot = VectorProcessingEngine::DistanceSqaure(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
+   dot = mu::VectorProcessingEngine::distanceSqaure(lhs.GetRawPtr(), rhs.GetRawPtr(),gTestSize);
    
    float test_dot = 0;
    for (int i = 0; i < gTestSize; i++)

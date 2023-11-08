@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <type_traits>
-#include "VPE/mu_VPE.hpp"
+#include "VPE/mu_vpe.hpp"
 
 template <typename dataType>
 class VectorType
@@ -159,7 +159,7 @@ returnType* operator+(const VectorType<inputTypeA>& lhs, const VectorType<inputT
     VectorType<returnType> res;
     res.Resize(lhs.Size());
 
-    VectorProcessingEngine::AddElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+    mu::VectorProcessingEngine::addElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
 
     return res.GetRawPtr();
 }
@@ -167,7 +167,7 @@ returnType* operator+(const VectorType<inputTypeA>& lhs, const VectorType<inputT
 template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
 returnType* operator+(const VectorType<inputTypeA>& lhs, inputTypeB* rhs)
 {
-    VectorProcessingEngine::AddElemwise(rhs, lhs.GetRawPtr(), rhs, lhs.Size());
+    mu::VectorProcessingEngine::addElemwise(rhs, lhs.GetRawPtr(), rhs, lhs.Size());
 
     return rhs;
 }
@@ -175,7 +175,7 @@ returnType* operator+(const VectorType<inputTypeA>& lhs, inputTypeB* rhs)
 template <typename inputTypeA, typename inputTypeB, typename returnType = inputTypeA>
 returnType* operator+(inputTypeA* lhs, const VectorType<inputTypeB>& rhs)
 {
-    VectorProcessingEngine::AddElemwise(lhs, lhs, rhs.GetRawPtr(), rhs.Size());
+    mu::VectorProcessingEngine::addElemwise(lhs, lhs, rhs.GetRawPtr(), rhs.Size());
 
     return lhs;
 }
@@ -186,7 +186,7 @@ const VectorType<returnType> operator-(const VectorType<inputTypeA>& lhs, const 
     VectorType<returnType> res;
     res.Resize(lhs.Size());
 
-    VectorProcessingEngine::SubElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+    mu::VectorProcessingEngine::subElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
 
     return res;
 }
@@ -197,7 +197,7 @@ const VectorType<returnType> operator*(const VectorType<inputTypeA>& lhs, const 
     VectorType<returnType> res;
     res.Resize(lhs.Size());
 
-    VectorProcessingEngine::MulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
+    mu::VectorProcessingEngine::mulElemwise(res.GetRawPtr(), lhs.GetRawPtr(), rhs.GetRawPtr(), lhs.Size());
 
     return res;
 }

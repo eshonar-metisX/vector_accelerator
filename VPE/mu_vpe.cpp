@@ -1,4 +1,4 @@
-#include "mu_VPE.hpp"
+#include "mu_vpe.hpp"
 
 #include <cstdint>
 #include <type_traits>
@@ -7,7 +7,7 @@
 using float16Type = half_float::half;
 
 template<>
-void VectorProcessingEngine::AddElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::addElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -16,7 +16,7 @@ void VectorProcessingEngine::AddElemwise(float* res, const float* const lhs, con
 };
 
 template<>
-void VectorProcessingEngine::AddElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::addElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -25,7 +25,7 @@ void VectorProcessingEngine::AddElemwise(float16Type* res, const float16Type* co
 };
 
 template <>
-void VectorProcessingEngine::SubElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::subElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -35,7 +35,7 @@ void VectorProcessingEngine::SubElemwise(float* res, const float* const lhs, con
 };
 
 template <>
-void VectorProcessingEngine::SubElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::subElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -45,7 +45,7 @@ void VectorProcessingEngine::SubElemwise(float16Type* res, const float16Type* co
 };
 
 template <>
-void VectorProcessingEngine::MulElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::mulElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -55,7 +55,7 @@ void VectorProcessingEngine::MulElemwise(float* res, const float* const lhs, con
 };
 
 template <>
-void VectorProcessingEngine::MulElemwise(float* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::mulElemwise(float* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -65,7 +65,7 @@ void VectorProcessingEngine::MulElemwise(float* res, const float16Type* const lh
 };
 
 template <>
-void VectorProcessingEngine::XorElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::xorElemwise(float* res, const float* const lhs, const float* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -75,7 +75,7 @@ void VectorProcessingEngine::XorElemwise(float* res, const float* const lhs, con
 };
 
 template <>
-void VectorProcessingEngine::XorElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+void mu::VectorProcessingEngine::xorElemwise(float16Type* res, const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {         
     for (uint64_t i = 0; i < size; i++)
     {
@@ -85,7 +85,7 @@ void VectorProcessingEngine::XorElemwise(float16Type* res, const float16Type* co
 };
 
 template <>
-float VectorProcessingEngine::ReduceSum(const float* const src, const uint64_t& size)
+float mu::VectorProcessingEngine::reduceSum(const float* const src, const uint64_t& size)
 {
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
@@ -96,7 +96,7 @@ float VectorProcessingEngine::ReduceSum(const float* const src, const uint64_t& 
 };
 
 template <>
-float VectorProcessingEngine::ReduceSum(const float16Type* const src, const uint64_t& size)
+float mu::VectorProcessingEngine::reduceSum(const float16Type* const src, const uint64_t& size)
 {
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
@@ -107,7 +107,7 @@ float VectorProcessingEngine::ReduceSum(const float16Type* const src, const uint
 };
 
 template <>
-float VectorProcessingEngine::DotProduct(const float* const lhs, const float* const rhs, const uint64_t& size)
+float mu::VectorProcessingEngine::dotProduct(const float* const lhs, const float* const rhs, const uint64_t& size)
 {      
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
@@ -119,7 +119,7 @@ float VectorProcessingEngine::DotProduct(const float* const lhs, const float* co
 };
 
 template <>
-float VectorProcessingEngine::DotProduct(const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+float mu::VectorProcessingEngine::dotProduct(const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {      
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
@@ -131,7 +131,7 @@ float VectorProcessingEngine::DotProduct(const float16Type* const lhs, const flo
 };
 
 template <>
-float VectorProcessingEngine::DistanceSqaure(const float* const lhs, const float* const rhs, const uint64_t& size)
+float mu::VectorProcessingEngine::distanceSqaure(const float* const lhs, const float* const rhs, const uint64_t& size)
 {      
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
@@ -143,7 +143,7 @@ float VectorProcessingEngine::DistanceSqaure(const float* const lhs, const float
 };
 
 template <>
-float VectorProcessingEngine::DistanceSqaure(const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
+float mu::VectorProcessingEngine::distanceSqaure(const float16Type* const lhs, const float16Type* const rhs, const uint64_t& size)
 {     
     float sum = 0;
     for (uint64_t i = 0; i < size; i++)
